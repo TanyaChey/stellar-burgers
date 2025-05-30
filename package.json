@@ -1,0 +1,108 @@
+{
+  "name": "react-burger-starter",
+  "version": "0.1.0",
+  "description": "Stellar Burgers - это захватывающее космическое приложение, посвященное приготовлению и доставке космических бургеров во Вселенной. В настоящее время наша бургерная находится на краю света и имеет потенциал стать одним из самых прославленных заведений в космосе.",
+  "keywords": [
+    "HTML",
+    "SCSS",
+    "SASS",
+    "WEBPACK",
+    "JS",
+    "JSX",
+    "REACT"
+  ],
+  "author": "Ars2805",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.7",
+    "@ya.praktikum/react-developer-burger-ui-components": "^1.14.0",
+    "clsx": "^1.2.1",
+    "commitlint": "^18.2.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
+    "prettier": "^3.0.3",
+    "prop-types": "^15.8.1",
+    "react": "^17.0.1",
+    "react-dnd": "^14.0.5",
+    "react-dnd-html5-backend": "^14.1.0",
+    "react-dom": "^17.0.1",
+    "react-intersection-observer": "^8.32.5",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.21.0",
+    "react-scripts": "5.0.1",
+    "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-ignore": "^1.2.5",
+    "redux-thunk": "^2.4.1",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0",
+    "uuid": "^8.3.2",
+    "web-vitals": "^1.0.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.2.0",
+    "@commitlint/config-conventional": "^18.1.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/react": "17.0.0",
+    "@types/react-dom": "17.0.0",
+    "@types/uuid": "^9.0.8",
+    "eslint": "^8.52.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-eslint-plugin": "^5.1.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "gh-pages": "^6.1.1",
+    "htmlhint": "^1.1.4",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "eject": "react-scripts eject",
+    "husky-inst": "npx husky install && chmod +x .husky/pre-commit .husky/commit-msg",
+    "msg-commit": "npx commitlint -E HUSKY_GIT_PARAMS",
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.css": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,ya?ml,md}": [
+      "prettier --write"
+    ],
+    "*.html": [
+      "htmlhint",
+      "prettier --write"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

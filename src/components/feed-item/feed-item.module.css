@@ -1,0 +1,40 @@
+/* Стили для контейнера */
+.container {
+  background: var(--background); /* Задаем цвет фона из переменной --background */
+  border-radius: var(--common-border-radius-s); /* Задаем радиус скругления границ из переменной --common-border-radius-s */
+  display: flex; /* Используем flex-контейнер */
+  flex-direction: column; /* Располагаем элементы вертикально */
+  gap: calc(var(--offset-base-size) * 6); /* Задаем промежуток между элементами с использованием переменной --offset-base-size */
+  transition: var(--common-transition); /* Задаем параметры анимации перехода из переменной --common-transition */
+}
+
+/* При наведении на контейнер уменьшаем прозрачность */
+.container:hover {
+  opacity: 0.8;
+}
+
+/* При фокусе на контейнере также уменьшаем прозрачность */
+.container:focus {
+  opacity: 0.8;
+}
+
+/* Стили для строки (line) */
+.line {
+  display: flex; /* Используем flex-контейнер */
+  align-items: center; /* Выравниваем элементы по центру по вертикали */
+  justify-content: space-between; /* Распределяем элементы равномерно по горизонтали */
+  gap: calc(var(--offset-base-size) * 6); /* Задаем промежуток между элементами с использованием переменной --offset-base-size */
+}
+
+/* Стили для списка (list) */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none; /* Убираем стандартное маркирование у списка */
+  display: flex; /* Используем flex-контейнер */
+}
+
+/* Стили для элемента с классом "number" */
+.number::before {
+  content: '#'; /* Добавляем символ "#" перед содержимым элемента с классом "number" */
+}

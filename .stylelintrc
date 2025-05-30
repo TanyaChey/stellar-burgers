@@ -1,0 +1,26 @@
+{
+  "extends": "stylelint-config-standard",
+  "defaultSeverity": "warning",
+  "rules": {
+		"selector-class-pattern": "^([a-z][a-z0-9-]*)(_[a-z0-9-]+)*$",   
+    "block-no-empty": true,
+    "color-no-invalid-hex": true,
+    "comment-no-empty": true,
+    "declaration-block-no-duplicate-properties": true,
+    "function-name-case": "lower",
+    "function-url-no-scheme-relative": true,
+    "function-url-quotes": "always",
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global"]
+      }
+    ],
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["import", "include", "mixin", "if", "else", "warn", "each"]
+      }
+    ]
+  }
+}
