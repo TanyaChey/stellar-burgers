@@ -163,8 +163,8 @@ describe('Проверка конструктора бургера', () => {
     cy.url().should('include', '/login'); 
 
     // Вводим email и пароль
-    cy.get(SELECTORS.EMAIL_INPUT).type('****'); // вставьте данные вашей почты
-    cy.get(SELECTORS.PASSWORD_INPUT).type('****'); // вставьте свой пароль
+    cy.get(SELECTORS.EMAIL_INPUT).type('tanya.chey@mail.ru'); // вставьте данные вашей почты
+    cy.get(SELECTORS.PASSWORD_INPUT).type('278120Tc'); // вставьте свой пароль
 
     // Отправляем форму
     cy.get(SELECTORS.LOGIN_BUTTON).click();
