@@ -1,63 +1,58 @@
-import { burgerReducer } from '../reducers/burger';
+import { ingredientsReducer } from '../reducers/ingredients';
 import {
-  ADD_INGREDIENT,
-  DELETE_INGREDIENT,
-  SORT_INGREDIENTS,
-} from '../types/burger';
+  FETCH_INGREDIENTS,
+  FETCH_INGREDIENTS_FAILED,
+  FETCH_INGREDIENTS_SUCCESS
+} from '../types/ingredients';
 
-describe('burgerReducer', () => {
-  const initialState = {
-    bun: null,
-    ingredients: [],
-    isRequesting: false,
-    hasRequestFailed: false,
-    order: null,
-    isOrder: false,
-  };
+const initialState = {
+  ingredients: [],
+  isRequesting: false,
+  hasRequestFailed: false,
+};
 
-  const fullIngredient = {
-    _id: '1',
-    name: 'Соус',
-    type: 'sauce',
-    proteins: 2,
-    fat: 1,
-    carbohydrates: 5,
-    calories: 50,
-    price: 30,
-    image: 'sauce.jpg',
-    image_mobile: 'sauce_mobile.jpg',
-    image_large: 'sauce_large.jpg',
-    __v: 0,
-    uuid: 'abc',
-  };
-
-  it('добавляет ингредиент', () => {
-    const action = { type: ADD_INGREDIENT, payload: fullIngredient };
-    const state = burgerReducer(initialState, action);
-    expect(state.ingredients).toHaveLength(1);
-    expect(state.ingredients[0]).toEqual(fullIngredient);
+describe('ingredientsReducer', () => {
+  it('should return initial state', () => {
+    // Передаем действие с типом 'any' для обхода ограничения типов
+    expect(ingredientsReducer(undefined, { type: 'UNKNOWN' } as any)).toEqual(initialState);
   });
 
-  it('удаляет ингредиент по uuid', () => {
-    const startState = {
+  it('should handle FETCH_INGREDIENTS', () => {
+    expect(ingredientsReducer(initialState, { type: FETCH_INGREDIENTS })).toEqual({
       ...initialState,
-      ingredients: [
-        { ...fullIngredient, uuid: 'a' },
-        { ...fullIngredient, _id: '2', uuid: 'b' },
-      ],
-    };
-    const action = { type: DELETE_INGREDIENT, payload: 'a' };
-    const state = burgerReducer(startState, action);
-    expect(state.ingredients).toEqual([{ ...fullIngredient, _id: '2', uuid: 'b' }]);
+      isRequesting: true,
+      hasRequestFailed: false,
+    });
   });
 
-  it('меняет порядок ингредиентов', () => {
-    const newOrder = [
-      { ...fullIngredient, _id: '2', uuid: 'b' },
-      { ...fullIngredient, _id: '1', uuid: 'a' },
-    ];
-    const action = { type: SORT_INGREDIENTS, payload: newOrder };
-    const state = burgerReducer({ ...initialState, ingredients: [] }, action);
-    expect(state.ingredients).toEqual(newOrder);
+  it('should handle FETCH_INGREDIENTS_SUCCESS', () => {
+    const ingredients = [{
+      _id: '1',
+      name: 'lettuce',
+      type: 'vegetable',
+      proteins: 0,
+      fat: 0,
+      carbohydrates: 2,
+      calories: 15,
+      price: 10,
+      image: '',
+      image_mobile: '',
+      image_large: '',
+      __v: 0
+    }];
+    expect(ingredientsReducer(initialState, { type: FETCH_INGREDIENTS_SUCCESS, payload: ingredients })).toEqual({
+      ...initialState,
+      isRequesting: false,
+      ingredients,
+    });
+  });
+
+  it('should handle FETCH_INGREDIENTS_FAILED', () => {
+    const state = { ...initialState, isRequesting: true };
+    expect(ingredientsReducer(state, { type: FETCH_INGREDIENTS_FAILED })).toEqual({
+      ...state,
+      isRequesting: false,
+      hasRequestFailed: true,
+    });
   });
 });

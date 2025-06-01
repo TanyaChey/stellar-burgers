@@ -1,30 +1,57 @@
 import { orderReducer } from '../reducers/order';
-import * as types from '../types/order';
+import {
+  FETCH_ORDER,
+  FETCH_ORDER_FAILED,
+  FETCH_ORDER_SUCCESS
+} from '../types/order';
+
+const initialState = {
+  information: null,
+  isRequesting: false,
+  hasRequestFailed: false,
+};
 
 describe('orderReducer', () => {
-  it('обрабатывает FETCH_ORDER', () => {
-    const action = { type: types.FETCH_ORDER };
-    const result = orderReducer(undefined, action);
-    expect(result).toMatchObject({
+  it('should return initial state', () => {
+    // Добавляем as any, чтобы избежать ошибки TS с неизвестным типом
+    expect(orderReducer(undefined, { type: 'UNKNOWN' } as any)).toEqual(initialState);
+  });
+
+  it('should handle FETCH_ORDER', () => {
+    expect(orderReducer(initialState, { type: FETCH_ORDER })).toEqual({
+      information: {},
       isRequesting: true,
       hasRequestFailed: false,
     });
   });
 
-  it('обрабатывает FETCH_ORDER_SUCCESS', () => {
-    const payload = {
-      _id: '123',
-      __v: 0,
-      ingredients: ['ingredient1', 'ingredient2'],
-      owner: 'Test User',  // owner - строка
+  it('should handle FETCH_ORDER_FAILED', () => {
+    const state = { ...initialState, isRequesting: true };
+    expect(orderReducer(state, { type: FETCH_ORDER_FAILED })).toEqual({
+      ...state,
+      isRequesting: false,
+      hasRequestFailed: true,
+    });
+  });
+
+  it('should handle FETCH_ORDER_SUCCESS', () => {
+    // Пример полноценного объекта, соответствующего интерфейсу IOrder
+    const orderInfo = {
+      _id: 'order123',
+      owner: 'user123',
       status: 'done',
-      name: 'Test Order',
-      number: 123,
-      createdAt: '2025-06-01T11:00:00Z',
-      updatedAt: '2025-06-01T11:00:00Z',
+      name: 'Order 1',
+      createdAt: '2025-06-01T12:00:00Z',
+      updatedAt: '2025-06-01T13:00:00Z',
+      number: 101,
+      __v: 0,
+      ingredients: ['ingredient1', 'ingredient2']
     };
-    const action = { type: types.FETCH_ORDER_SUCCESS, payload };
-    const result = orderReducer(undefined, action);
-    expect(result.information).toEqual(payload);
+    const state = { ...initialState, isRequesting: true };
+    expect(orderReducer(state, { type: FETCH_ORDER_SUCCESS, payload: orderInfo })).toEqual({
+      information: orderInfo,
+      isRequesting: false,
+      hasRequestFailed: false,
+    });
   });
 });

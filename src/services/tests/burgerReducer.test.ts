@@ -1,51 +1,132 @@
-import { ingredientsReducer } from '../reducers/ingredients';
+import { burgerReducer } from '../reducers/burger';
 import {
-  FETCH_INGREDIENTS,
-  FETCH_INGREDIENTS_SUCCESS,
-  FETCH_INGREDIENTS_FAILED,
-} from '../types/ingredients';
+  ADD_BUN,
+  ADD_INGREDIENT,
+  DELETE_INGREDIENT,
+  DELETE_ALL_INGREDIENTS,
+  SEND_ORDER,
+  SEND_ORDER_FAILED,
+  SEND_ORDER_SUCCESS,
+  SORT_INGREDIENTS,
+  SET_ORDER_STATE
+} from '../types/burger';
+import { IIngredient } from '../../utils/types/ingredients';
+import { IUuid } from '../../utils/types/types';
 
-describe('ingredientsReducer', () => {
-  const initialState = {
-    ingredients: [],
-    isRequesting: false,
-    hasRequestFailed: false,
-  };
+type TIngredientWithUuid = IIngredient & IUuid;
 
-  const fullIngredient = {
-    _id: '1',
-    name: 'Булка',
-    type: 'bun',
-    proteins: 10,
-    fat: 5,
-    carbohydrates: 20,
-    calories: 250,
-    price: 100,
-    image: 'img.jpg',
-    image_mobile: 'img_m.jpg',
-    image_large: 'img_l.jpg',
-    __v: 0,
-  };
+const initialState = {
+  bun: null,
+  ingredients: [] as TIngredientWithUuid[],
+  isRequesting: false,
+  hasRequestFailed: false,
+  order: null,
+  isOrder: false,
+};
 
-  it('обрабатывает FETCH_INGREDIENTS', () => {
-    const action = { type: FETCH_INGREDIENTS };
-    const state = ingredientsReducer(initialState, action);
-    expect(state.isRequesting).toBe(true);
-    expect(state.hasRequestFailed).toBe(false);
+const mockIngredient = (overrides: Partial<TIngredientWithUuid> = {}): TIngredientWithUuid => ({
+  _id: 'id1',
+  uuid: 'uuid1',
+  name: 'Test Ingredient',
+  type: 'main',
+  proteins: 10,
+  fat: 5,
+  carbohydrates: 15,
+  calories: 100,
+  price: 50,
+  image: 'img.jpg',
+  image_mobile: 'img_m.jpg',
+  image_large: 'img_l.jpg',
+  __v: 0,
+  ...overrides,
+});
+
+describe('burgerReducer', () => {
+  it('should return initial state', () => {
+    expect(burgerReducer(undefined, { type: 'UNKNOWN' as any })).toEqual(initialState);
   });
 
-  it('обрабатывает FETCH_INGREDIENTS_SUCCESS', () => {
-    const ingredients = [fullIngredient];
-    const action = { type: FETCH_INGREDIENTS_SUCCESS, payload: ingredients };
-    const state = ingredientsReducer(initialState, action);
-    expect(state.isRequesting).toBe(false);
-    expect(state.ingredients).toEqual(ingredients);
+  it('should handle ADD_INGREDIENT', () => {
+    const ingredient = mockIngredient({ uuid: '1' });
+    expect(burgerReducer(initialState, { type: ADD_INGREDIENT, payload: ingredient }))
+      .toEqual({
+        ...initialState,
+        ingredients: [ingredient],
+      });
   });
 
-  it('обрабатывает FETCH_INGREDIENTS_FAILED', () => {
-    const action = { type: FETCH_INGREDIENTS_FAILED };
-    const state = ingredientsReducer(initialState, action);
-    expect(state.isRequesting).toBe(false);
-    expect(state.hasRequestFailed).toBe(true);
+  it('should handle ADD_BUN', () => {
+    const bun = mockIngredient({ uuid: 'bun1', type: 'bun' });
+    expect(burgerReducer(initialState, { type: ADD_BUN, payload: bun })).toEqual({
+      ...initialState,
+      bun,
+    });
+  });
+
+  it('should handle DELETE_INGREDIENT', () => {
+    const state = {
+      ...initialState,
+      ingredients: [mockIngredient({ uuid: '1' }), mockIngredient({ uuid: '2' })],
+    };
+    expect(burgerReducer(state, { type: DELETE_INGREDIENT, payload: '1' })).toEqual({
+      ...state,
+      ingredients: [mockIngredient({ uuid: '2' })],
+    });
+  });
+
+  it('should handle DELETE_ALL_INGREDIENTS', () => {
+    const state = {
+      ...initialState,
+      bun: mockIngredient({ uuid: 'bun1', type: 'bun' }),
+      ingredients: [mockIngredient({ uuid: '1' })],
+    };
+    expect(burgerReducer(state, { type: DELETE_ALL_INGREDIENTS })).toEqual({
+      ...state,
+      bun: {},
+      ingredients: [],
+    });
+  });
+
+  it('should handle SORT_INGREDIENTS', () => {
+    const ingredients = [mockIngredient({ uuid: '2' }), mockIngredient({ uuid: '1' })];
+    expect(burgerReducer(initialState, { type: SORT_INGREDIENTS, payload: ingredients })).toEqual({
+      ...initialState,
+      ingredients,
+    });
+  });
+
+  it('should handle SEND_ORDER', () => {
+    expect(burgerReducer(initialState, { type: SEND_ORDER })).toEqual({
+      ...initialState,
+      isRequesting: true,
+      hasRequestFailed: false,
+      order: {},
+    });
+  });
+
+  it('should handle SEND_ORDER_FAILED', () => {
+    const state = { ...initialState, isRequesting: true };
+    expect(burgerReducer(state, { type: SEND_ORDER_FAILED })).toEqual({
+      ...state,
+      isRequesting: false,
+      hasRequestFailed: true,
+    });
+  });
+
+  it('should handle SEND_ORDER_SUCCESS', () => {
+    const order = 123;
+    const state = { ...initialState, isRequesting: true };
+    expect(burgerReducer(state, { type: SEND_ORDER_SUCCESS, payload: order })).toEqual({
+      ...state,
+      isRequesting: false,
+      order,
+    });
+  });
+
+  it('should handle SET_ORDER_STATE', () => {
+    expect(burgerReducer(initialState, { type: SET_ORDER_STATE, payload: true })).toEqual({
+      ...initialState,
+      isOrder: true,
+    });
   });
 });
